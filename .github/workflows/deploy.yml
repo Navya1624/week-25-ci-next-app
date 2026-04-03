@@ -16,6 +16,8 @@ jobs:
           chmod 600 key.pem
 
           ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@18.61.74.148 << 'EOF'
+            export NVM_DIR="$HOME/.nvm"
+            source "$NVM_DIR/nvm.sh"
             cd ~/week-25-ci-next-app
             git pull origin production
             npm install -g pnpm
