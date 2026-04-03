@@ -1,0 +1,25 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY_NAVYA_PEM }}" > key.pem
+          chmod 600 key.pem
+
+          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@18.61.74.148 << 'EOF'
+            cd ~/week-25-ci-next-app
+            git pull origin production
+            npm install -g pnpm
+            pnpm install
+            pnpm build
+            pm2 restart all
+          EOF
